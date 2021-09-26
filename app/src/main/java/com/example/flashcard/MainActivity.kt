@@ -7,51 +7,42 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var wordTextView: TextView
     val wordList = WordList()
-    var currentWord : Word? = null
+    lateinit var textView : TextView
+    lateinit var  directionButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        wordTextView = findViewById(R.id.wordTextView)
+        textView = findViewById(R.id.textView)
+        directionButton = findViewById(R.id.directionButton)
 
-        loadNewWord()
+        loadQuestion()
 
-        wordTextView.setOnClickListener {
-           revealTranslation()
+        textView.setOnClickListener {
+            textView.text = wordList.getTranslatedWord()
         }
 
+        directionButton.setOnClickListener {
+            wordList.revertTranslateDirection()
+            loadQuestion()
+        }
     }
 
-    fun revealTranslation() {
-        wordTextView.text = currentWord?.english
+
+    fun loadQuestion() {
+        wordList.changeWord()
+
+        textView.text = wordList.getOriginalWord()
     }
 
-    fun loadNewWord() {
-        currentWord = wordList.getNewWord()
-        wordTextView.text = currentWord?.swedish
-    }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if( event?.action == MotionEvent.ACTION_UP) {
-            loadNewWord()
+        if (event?.action == MotionEvent.ACTION_UP) {
+            loadQuestion()
         }
 
         return true
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
