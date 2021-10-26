@@ -2,12 +2,10 @@ package com.example.flashcard
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.TextView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity() : AppCompatActivity(), CoroutineScope {
@@ -17,7 +15,7 @@ class MainActivity() : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     lateinit var wordTextView: TextView
-    val wordList = WordList()
+    var wordList : WordList? = null
     var currentWord : Word? = null
     lateinit var db : AppDatabase
 
@@ -27,12 +25,15 @@ class MainActivity() : AppCompatActivity(), CoroutineScope {
         job = Job()
 
         db = AppDatabase.getInstance(this)
-/*
-        addNewWord(Word(0, "welcome", "Välkommen"))
-        addNewWord(Word(0, "Hej", "Hello"))
-*/
+
+//        addNewWord(Word(0, "welcome", "Välkommen"))
+//        addNewWord(Word(0, "Hello", "Hej"))
+//        addNewWord(Word(0, "Green", "Grön"))
+//        addNewWord(Word(0, "Red", "Röd"))
+
         wordTextView = findViewById(R.id.textView)
 
+        loadAllWords()
       //  loadNewWord()
 
         wordTextView.setOnClickListener {
@@ -49,12 +50,25 @@ class MainActivity() : AppCompatActivity(), CoroutineScope {
 
     }
 
+    fun loadAllWords() {
+        val words = async(Dispatchers.IO) {
+            db.wordDao.getAll()
+        }
+
+        launch {
+            val list = words.await().toMutableList()
+            wordList = WordList(list)
+            loadNewWord()
+        }
+    }
+
+
     fun revealTranslation() {
         wordTextView.text = currentWord?.english
     }
 
     fun loadNewWord() {
-        currentWord = wordList.getNewWord()
+        currentWord = wordList?.getNewWord()
         wordTextView.text = currentWord?.swedish
     }
 

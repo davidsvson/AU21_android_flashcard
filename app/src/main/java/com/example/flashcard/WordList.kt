@@ -2,8 +2,8 @@ package com.example.flashcard
 
 import android.util.Log
 
-class WordList (){
-    private val wordList = mutableListOf<Word>()
+class WordList ( private val wordList : MutableList<Word>){
+
    // private val usedWords = mutableListOf<Word>()
    // private var nrOfWordsUsed = 0
 /*
@@ -45,8 +45,9 @@ class WordList (){
 
 
     // alternativ 3
-    fun getNewWord() : Word {
+    fun getNewWord() : Word? {
         if (wordList.isEmpty()) {
+            return null
             //initializeWords()
         }
         val rnd = (0 until wordList.size).random()
