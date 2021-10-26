@@ -6,7 +6,7 @@ class WordList (){
     private val wordList = mutableListOf<Word>()
    // private val usedWords = mutableListOf<Word>()
    // private var nrOfWordsUsed = 0
-
+/*
     init {
         initializeWords()
     }
@@ -19,7 +19,7 @@ class WordList (){
         wordList.add(Word("Welcome", "Välkommen"))
         wordList.add(Word("Computer", "Dator"))
     }
-
+*/
     // alternativ 2 -
 //    fun getNewWord() : Word {
 //        if (nrOfWordsUsed >= wordList.size) {
@@ -47,7 +47,7 @@ class WordList (){
     // alternativ 3
     fun getNewWord() : Word {
         if (wordList.isEmpty()) {
-            initializeWords()
+            //initializeWords()
         }
         val rnd = (0 until wordList.size).random()
 
